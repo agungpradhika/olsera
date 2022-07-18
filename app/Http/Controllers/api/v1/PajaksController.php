@@ -50,20 +50,20 @@ class PajaksController extends Controller
                     return response()->json([
                         'status_code' => 200,
                         'data' => $pajak,
-                        'message' => 'Item Berhasil Disimpan!'
+                        'message' => 'Pajak Berhasil Disimpan!'
                     ], 200);
                 // jika error atau gagal tersimpan
                 } else {
                     return response()->json([
                         'status_code' => 401,
                         'data' => $validator->errors(),
-                        'message' => 'Item Gagal Disimpan!'
+                        'message' => 'Pajak Gagal Disimpan!'
                     ], 401);
                 }
             } else {
                 return response()->json([
                     'status_code' => 401,
-                    'message' => 'Item id yang dimasukan tidak tersedia!'
+                    'message' => 'Pajak id yang dimasukan tidak tersedia!'
                 ], 401);
 
 
