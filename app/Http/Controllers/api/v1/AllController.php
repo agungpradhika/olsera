@@ -11,11 +11,19 @@ class AllController extends Controller
 {
     public function index()
     {
-        $data = Item::with('pajak')->get();
+        $data = Item::with('pajak')->get()->map(function ($item) {
+            $item->pajak->map(function ($pajak) { 
+            $pajak->rate = ($pajak->rate /100*100)."%";
+                return $pajak;
+            });
 
-        return response()->json([
-            'status_code' => 200,
-            'data' => $data,
-        ], 200);
+            echo $item;
+            // return $item;
+
+            return response()->json([
+                'status_code' => 200,
+                'data' => $item,
+            ], 200);
+        });
     }
 }
