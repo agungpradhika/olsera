@@ -26,5 +26,7 @@ Route::post('/v1/pajaks/create', 'api\v1\PajaksController@create');
 Route::post('/v1/pajaks/update', 'api\v1\PajaksController@update');
 Route::delete('/v1/pajaks/{id?}', 'api\v1\PajaksController@destroy');
 
+
 Route::get('/v1/all', 'api\v1\AllController@index');
+Route::post('/v1/create', 'api\v1\AllController@createItem');
 

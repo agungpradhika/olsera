@@ -8,12 +8,12 @@ class Pajak extends Model
 {
     protected $table = 'pajak';
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     protected $visible = ['id', 'nama', 'rate'];
 
     public function item()
     {
-        return $this->belongsTo('App\Item');
+        return $this->belongsToMany('App\Item', 'item_pajak')->withTimestamps();
     }
 }

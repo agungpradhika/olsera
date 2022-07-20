@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Item;
+use App\Pajak;
 use Illuminate\Support\Facades\Validator;
 
 class ItemsController extends Controller
@@ -42,6 +43,7 @@ class ItemsController extends Controller
                 $data = Item::create([
                     'nama'     => $nama,
                 ]);
+
                 // jika item terisi dan benar menampilkan true
                 if ($data) {
                     return response()->json([
@@ -104,8 +106,9 @@ class ItemsController extends Controller
 
     public function destroy($id)
     {
-        $data = Item::findOrFail($id);
-        $data->delete();
+        $pajak = Pajak::with('items')->first();
+        $data = $pajak->items()->detach($id);
+        // dd($data);
 
         if ($data) {
             return response()->json([

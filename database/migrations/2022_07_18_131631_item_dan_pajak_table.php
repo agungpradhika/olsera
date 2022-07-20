@@ -21,18 +21,23 @@ class ItemDanPajakTable extends Migration
         Schema::create('pajak', function(Blueprint $kolom){
      
           $kolom->increments('id');
-          $kolom->unsignedInteger('item_id')->nullable();
           $kolom->string('nama');
           $kolom->decimal('rate');
           $kolom->timestamps();
         });
 
-        Schema::table('pajak', function(Blueprint $kolom){
-          $kolom->foreign('item_id')
-                ->references('id')
-                ->on('item')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+
+        Schema::create('item_pajak', function(Blueprint $kolom){
+     
+          $kolom->increments('id');
+          $kolom->unsignedInteger('item_id')->nullable();
+          $kolom->unsignedInteger('pajak_id')->nullable();
+          $kolom->timestamps();
+        });
+
+        Schema::table('item_pajak', function(Blueprint $kolom){
+          $kolom->foreign('item_id')->references('id')->on('item')->onDelete('cascade')->onUpdate('cascade');
+          $kolom->foreign('pajak_id')->references('id')->on('pajak')->onDelete('cascade')->onUpdate('cascade');
         });
 
     }

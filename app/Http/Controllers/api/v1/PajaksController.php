@@ -14,12 +14,12 @@ class PajaksController extends Controller
     {
         //validate data
         $validator = Validator::make($request->all(), [
-            'item_id'  => 'required',
+            'item_id'  => 'required', 
             'nama'     => 'required',
             'rate'     => 'required',
         ],
             [
-                'item_id.required' => 'Masukkan Id Item !',
+                'item_id.required' => 'Masukkan Id item !',
                 'nama.required' => 'Masukkan Nama Pajak !',
                 'rate.required' => 'Masukkan Nilai Pajak !',
             ]
@@ -36,17 +36,22 @@ class PajaksController extends Controller
         } else {
 
             $item_id = $request->input('item_id');
-            $item = Item::where('id', '=', $item_id)->get();
+            $cekItem = Item::where('id', '=', $item_id)->get();
 
-            if ($item->isNotEmpty()) {
+            if ($cekItem->isNotEmpty())
+            {
+
                 $pajak = Pajak::create([
-                    'item_id'     => $item_id,
+                    'item_id'     => $request->input('item_id'),
                     'nama'        => $request->input('nama'),
                     'rate'        => $request->input('rate'),
                 ]);
 
+                $item = Item::find($request->input('item_id'));
+                $data = $item->pajaks()->attach($pajak->id);
+               
                 // jika item terisi dan benar menampilkan true
-                if ($pajak) {
+                if ($item) {
                     return response()->json([
                         'status_code' => 200,
                         'data' => $pajak,
@@ -60,12 +65,12 @@ class PajaksController extends Controller
                         'message' => 'Pajak Gagal Disimpan!'
                     ], 401);
                 }
+
             } else {
                 return response()->json([
                     'status_code' => 401,
-                    'message' => 'Pajak id yang dimasukan tidak tersedia!'
+                    'message' => 'Item id yang dimasukan tidak tersedia!'
                 ], 401);
-
 
             }
         }
@@ -94,10 +99,13 @@ class PajaksController extends Controller
 
         } else {
 
-            $data = Pajak::whereId($request->input('id'))->update([
-                'nama'     => $request->input('nama'),
-                'rate'     => $request->input('rate'),
-            ]);
+            // $data = Pajak::whereId($request->input('id'))->update([
+            //     'nama'     => $request->input('nama'),
+            //     'rate'     => $request->input('rate'),
+            // ]);
+            $id = $request->input('id');
+            $data = Pajak::find($id);
+            
 
             if ($data) {
                 return response()->json([
@@ -116,8 +124,8 @@ class PajaksController extends Controller
 
     public function destroy($id)
     {
-        $data = Pajak::findOrFail($id);
-        $data->delete();
+        $item = Item::with('pajaks')->first();
+        $data = $item->pajaks()->detach($id);
 
         if ($data) {
             return response()->json([
